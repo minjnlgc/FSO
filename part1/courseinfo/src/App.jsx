@@ -1,72 +1,76 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState } from "react";
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
 
-const Header = (props) => {
+const Header = ({course}) => {
   return (
     <>
-      <h1>{props.course}</h1>
+      <h1>{course}</h1>
     </>
-  )
-}
+  );
+};
 
-const Part = (props) => {
+const Part = ({name, exercise}) => {
   return (
     <>
       <p>
-        {props.name} {props.exercise}
+        {name} {exercise}
       </p>
     </>
-  )
-}
+  );
+};
 
-const Content = (props) => {
+const Content = ({name, parts}) => {
+  return (
+    <>
+      {parts.map((e, i) => {
+        return <Part name={e.name} exercise={e.exercise} key={i} />;
+      })}
+    </>
+  );
+};
+
+const Total = ({name, parts}) => {
+
+  const exerciseTotal = parts.reduce((acc, e) => {
+    return acc + e.exercise;
+  }, 0)
 
   return (
     <>
-      <Part name={props.parts[0].name} exercise={props.parts[0].exercise}/>
-      <Part name={props.parts[1].name} exercise={props.parts[1].exercise}/>
-      <Part name={props.parts[2].name} exercise={props.parts[2].exercise}/>
+      <p>
+        Number of exercises {exerciseTotal}
+      </p>
     </>
-  )
-}
-
-
-const Total = (props) => {
-  return (
-    <>
-      <p>Number of exercises {props.parts[0].exercise + props.parts[1].exercise + props.parts[2].exercise} </p>
-    </>
-  )
-}
-
+  );
+};
 
 const App = () => {
   const course = {
-    name: 'Half Stack application development',
+    name: "Half Stack application development",
     parts: [
       {
-        name: 'Fundamentals of React',
-        exercise: 10
+        name: "Fundamentals of React",
+        exercise: 10,
       },
       {
-        name: 'Using props to pass data',
-        exercise: 7
-      },  
+        name: "Using props to pass data",
+        exercise: 7,
+      },
       {
-        name: 'State of a component',
-        exercise: 14
-      }
-    ]
-  }
+        name: "State of a component",
+        exercise: 14,
+      },
+    ],
+  };
 
   return (
     <>
-      <Header course={course.name}/>
-      <Content parts={course.parts}/>
-      <Total parts={course.parts}/> 
+      <Header course={course.name} />
+      <Content parts={course.parts} />
+      <Total parts={course.parts} />
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;
