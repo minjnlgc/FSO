@@ -5,12 +5,14 @@ import personService from "./services/persons";
 import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [searchName, setSearchName] = useState("");
+  const [operationMessage, setMessage] = useState("");
 
   useEffect(() => {
     personService.getAll().then((initialPersons) => {
@@ -74,9 +76,21 @@ const App = () => {
               );
               setNewName("");
               setNewNumber("");
+
+              setMessage(`Updated ${returnedPerson.name}'s number`);
+              setTimeout(() => {
+                setMessage(null);
+              }, 3000);
             })
             .catch((e) => {
+              
               console.log("Error updating person:", e);
+
+              setMessage(`Information of ${newName} has already been removed from the server`);
+              setTimeout(() => {
+                setMessage(null);
+              }, 3000);
+
             });
         }
       }
@@ -87,6 +101,11 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           setNewName("");
           setNewNumber("");
+
+          setMessage(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
         })
         .catch((error) => {
           console.log("Error creating person:", error);
@@ -97,6 +116,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={operationMessage} />
       <Filter
         text={"filter shown with"}
         persons={persons}

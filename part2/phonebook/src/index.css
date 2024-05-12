@@ -66,3 +66,28 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+/* self */
+.success {
+  color: #0ad406;
+  background-color: rgba(190, 255, 203, 0.122);
+  border: 3px solid rgba(36, 241, 6, 0.46);  
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-family: inherit;
+}
+
+.fail {
+  color: #d41406;
+  background-color: rgba(255, 190, 190, 0.122);
+  border: 3px solid rgba(241, 6, 6, 0.46);  
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-family: inherit;
+}
