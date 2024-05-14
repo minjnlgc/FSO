@@ -82,11 +82,12 @@ const App = () => {
                 setMessage(null);
               }, 3000);
             })
-            .catch((e) => {
+            .catch((error) => {
               
-              console.log("Error updating person:", e);
+              console.log("Error updating person:", error.response.data.error);
 
-              setMessage(`Information of ${newName} has already been removed from the server`);
+              //setMessage(`Information of ${newName} has already been removed from the server`);
+              setMessage(error.response.data.error)
               setTimeout(() => {
                 setMessage(null);
               }, 3000);
@@ -110,7 +111,7 @@ const App = () => {
         .catch((error) => {
           console.log(error.response.data.error);
 
-          setMessage(`Added ${error.response.data.error}`);
+          setMessage(error.response.data.error);
           setTimeout(() => {
             setMessage(null);
           }, 3000);
