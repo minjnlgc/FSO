@@ -122,6 +122,7 @@ const App = () => {
         persons={persons}
         searchName={searchName}
         handleSearchNameChange={handleSearchNameChange}
+        handleDelete={handleDelete}
       />
 
       <h2>Add a new</h2>

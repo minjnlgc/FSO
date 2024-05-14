@@ -1,6 +1,6 @@
 import Persons from "./Persons";
 
-const Filter = ({ text, persons, searchName, handleSearchNameChange }) => {
+const Filter = ({ text, persons, searchName, handleSearchNameChange, handleDelete }) => {
     const filteredPersons = persons.filter((p) => {
       return (
         p.name.toLowerCase().includes(searchName.toLowerCase()) &&
@@ -14,7 +14,7 @@ const Filter = ({ text, persons, searchName, handleSearchNameChange }) => {
           {text}
           <input value={searchName} onChange={handleSearchNameChange} />
         </div>
-        <Persons persons={filteredPersons} />
+        <Persons persons={filteredPersons} handleDelete={handleDelete} />
       </>
     );
   };
