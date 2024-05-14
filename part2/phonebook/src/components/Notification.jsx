@@ -1,15 +1,14 @@
 const Notification = ({ message }) => {
-    if (!message) {
-        return null;
-    }
+  if (!message) {
+    return null;
+  }
 
-    const classToUse = message.includes('removed') ? 'fail' : 'success';
+  const classToUse =
+    message.includes("removed") || message.includes("failed")
+      ? "fail"
+      : "success";
 
-    return (
-        <div className={classToUse}>
-            {message}
-        </div>
-    )
-}
+  return <div className={classToUse}>{message}</div>;
+};
 
-export default Notification
+export default Notification;

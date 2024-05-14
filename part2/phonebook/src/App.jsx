@@ -108,7 +108,12 @@ const App = () => {
           }, 3000);
         })
         .catch((error) => {
-          console.log("Error creating person:", error);
+          console.log(error.response.data.error);
+
+          setMessage(`Added ${error.response.data.error}`);
+          setTimeout(() => {
+            setMessage(null);
+          }, 3000);
         });
     }
   };
