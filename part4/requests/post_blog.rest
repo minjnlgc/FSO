@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+
+{
+    "title": "EVIL DOES NOT EXIST",
+    "author": "hamakuchi ryusuke",
+    "url": "https://en.wikipedia.org/wiki/Evil_Does_Not_Exist",
+    "likes": 1231
+}
