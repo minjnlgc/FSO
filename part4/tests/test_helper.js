@@ -51,10 +51,23 @@ const initialBlogs = [
   },
 ];
 
-
 const getBlogsInDB = async () => {
   const blogs = await Blog.find({});
   return blogs.map(blog => blog.toJSON())
 }
 
-module.exports = { initialBlogs, getBlogsInDB }
+const nonExistingId = async () => {
+  const blog = new Blog({
+    title: "To be deleted",
+    author: "?",
+    url: "https://en.wikipedia.org/wiki/Evil_Does_Not_Exist",
+    likes: 6,
+  });
+
+  await blog.save();
+  await blog.deleteOne();
+
+  return blog._id.toString();
+}
+
+module.exports = { initialBlogs, getBlogsInDB, nonExistingId }
