@@ -2,7 +2,11 @@ const blogsRouter = require("express").Router();
 const Blog = require("../model/blog");
 
 blogsRouter.get("/", async (request, response) => {
-  const returnedBlogs = await Blog.find({});
+  const returnedBlogs = await Blog.find({}).populate("user", {
+    username: 1,
+    name: 1,
+    id: 1,
+  });
   response.json(returnedBlogs);
 });
 
@@ -29,7 +33,7 @@ blogsRouter.put("/:id", async (request, response) => {
     { $set: updates },
     { new: true, runValidators: true }
   );
-  
+
   if (updatedBlog) {
     response.status(200).json(updatedBlog);
   } else {
