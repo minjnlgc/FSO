@@ -12,11 +12,26 @@ const api = supertest(app);
 
 describe("blogs test", () => {
   beforeEach(async () => {
+    // initialise blog
     await Blog.deleteMany({});
 
     const blogObject = helper.initialBlogs.map((blog) => Blog(blog));
     const promiseArray = blogObject.map((blog) => blog.save());
     await Promise.all(promiseArray);
+
+    // initialise user
+    await User.deleteMany({});
+
+    const password = "12345678";
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      username: "hellas",
+      name: "Arto Hellas",
+      passwordHash: passwordHash,
+    });
+
+    await newUser.save();
   });
 
   describe("get all blogs", () => {
@@ -41,7 +56,7 @@ describe("blogs test", () => {
     });
   });
 
-  describe("create new blogs", () => {
+  describe("create new blogs, but have to provide token", () => {
     test("create new blogs 1 - number of blogs increased by one, and content saved", async () => {
       const newBlog = {
         title: "Evil Does Not Exist",
@@ -50,8 +65,11 @@ describe("blogs test", () => {
         likes: 6,
       };
 
+      const token = await helper.userToken();
+
       await api
         .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect("Content-Type", /application\/json/);
@@ -70,7 +88,12 @@ describe("blogs test", () => {
         url: "https://en.wikipedia.org/wiki/Evil_Does_Not_Exist",
       };
 
-      const savedBlog = await api.post("/api/blogs").send(newBlog);
+      const token = await helper.userToken();
+
+      const savedBlog = await api
+        .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
+        .send(newBlog);
       assert.strictEqual(savedBlog.body.likes, 0);
     });
 
@@ -89,9 +112,65 @@ describe("blogs test", () => {
         author: "Ryusuke Hamaguchi",
       };
 
-      await api.post("/api/blogs").send(newBlogMissingExpectAuthor).expect(400);
-      await api.post("/api/blogs").send(newBlogMissingTitle).expect(400);
-      await api.post("/api/blogs").send(newBlogMissingUrl).expect(400);
+      const token = await helper.userToken();
+
+      await api
+        .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
+        .send(newBlogMissingExpectAuthor)
+        .expect(400);
+      await api
+        .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
+        .send(newBlogMissingTitle)
+        .expect(400);
+      await api
+        .post("/api/blogs")
+        .set("Authorization", `Bearer ${token}`)
+        .send(newBlogMissingUrl)
+        .expect(400);
+    });
+
+    test('create new blogs 4 - cannot create new blog if token invalid', async () => {
+      
+      const blogsAtStart = await Blog.find({});
+      
+      const newBlog = {
+        title: "Evil Does Not Exist",
+        author: "Ryusuke Hamaguchi",
+        url: "https://en.wikipedia.org/wiki/Evil_Does_Not_Exist",
+      };
+
+      const nonExistingUserToken = await helper.nonExistingUserToken();
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${nonExistingUserToken}`)
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+
+      const blogAtEnd = await Blog.find({});
+      assert(blogAtEnd.length, blogsAtStart.length)
+    });
+
+    test('create new blogs 5 - cannot create new blog if no token provided', async () => {
+      
+      const blogsAtStart = await Blog.find({});
+      
+      const newBlog = {
+        title: "Evil Does Not Exist",
+        author: "Ryusuke Hamaguchi",
+        url: "https://en.wikipedia.org/wiki/Evil_Does_Not_Exist",
+      };
+      
+      await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(401)
+        .expect('Content-Type', /application\/json/);
+
+      const blogAtEnd = await Blog.find({});
+      assert(blogAtEnd.length, blogsAtStart.length)
     });
   });
 

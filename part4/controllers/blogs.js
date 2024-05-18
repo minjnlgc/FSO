@@ -1,6 +1,7 @@
 const blogsRouter = require("express").Router();
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 const Blog = require("../model/blog");
+const User = require("../model/user");
 
 blogsRouter.get("/", async (request, response) => {
   const returnedBlogs = await Blog.find({}).populate("user", {
@@ -12,8 +13,19 @@ blogsRouter.get("/", async (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response) => {
-  const blog = new Blog(request.body);
-  const savedBlog = await blog.save();
+  const user = request.user;
+
+  if (!user) {
+    response.status(401).json({ error: "token invalid" });
+  }
+
+  const newBlogInfo = {
+    ...request.body,
+    user: user._id,
+  };
+
+  const newBlog = new Blog(newBlogInfo);
+  const savedBlog = await newBlog.save();
   response.status(201).json(savedBlog);
 });
 
@@ -23,8 +35,24 @@ blogsRouter.get("/:id", async (request, response) => {
 });
 
 blogsRouter.delete("/:id", async (request, response) => {
-  const deletedBlog = await Blog.findByIdAndDelete(request.params.id);
-  response.status(200).json(deletedBlog);
+  const user = request.user;
+
+  if (!user) {
+    response.status(401).json({ error: "token invalid" });
+  }
+
+  const blog = await Blog.findById(request.params.id);
+
+  if (!blog) {
+    response.status(404).json({ error: "invalid id" });
+  }
+
+  if (blog.user.toString() === user._id.toString()) {
+    const deletedBlog = await Blog.findByIdAndDelete(request.params.id);
+    response.status(200).json(deletedBlog);
+  } else {
+    response.status(401).json({ error: "unauthorised action" });
+  }
 });
 
 blogsRouter.put("/:id", async (request, response) => {
