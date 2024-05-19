@@ -49,6 +49,8 @@ function App() {
         password,
       });
 
+      console.log(user);
+
       window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
       blogService.setToken(user.token);
 

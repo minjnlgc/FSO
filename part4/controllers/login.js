@@ -14,12 +14,15 @@ loginRouter.post("/", async (request, response) => {
     await bcrypt.compare(password, returnedUser.passwordHash);
   } catch (error) {
     console.log("error:", error);
+    return response.status(401).json({ error: "invalid username or password" });
   }
 
-  const isPasswordCorrect = returnedUser === null ? false : true;
+  const isPasswordCorrect = returnedUser === null
+    ? false
+    : await bcrypt.compare(password, returnedUser.passwordHash);
 
   if (!isPasswordCorrect || !returnedUser) {
-    response.status(401).json({ error: "invalid username or password" });
+    return response.status(401).json({ error: "invalid username or password" });
   }
 
   //  generate the jwt tokens
