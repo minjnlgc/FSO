@@ -159,7 +159,8 @@ function App() {
         <Togglable label='new note' ref={blogFormRef}>
           <BlogForm handleCreateNewBlog={handleCreateNewBlog} />
         </Togglable>
-        
+
+        <br />        
 
         {blogs.map((b) => (
           <Blog key={b.id} blog={b} />
