@@ -96,10 +96,10 @@ function App() {
       const newBlogs = blogs.concat(newBlog);
       setBlogs(newBlogs);
 
-      console.log('newBlog:', newBlog);
+      console.log("newBlog:", newBlog);
 
       setNotificationMsg(
-        `a new blog ${newBlog.title} by ${newBlog.author} added`
+        `a new blog ${newBlog.title} by ${newBlog.author} added`,
       );
       setTimeout(() => {
         setNotificationMsg("");
@@ -156,7 +156,7 @@ function App() {
       setBlogs(blogsAfterDelete);
 
       setNotificationMsg(
-        `successfully deleted ${deletedBlog.title} by ${deletedBlog.author}!`
+        `successfully deleted ${deletedBlog.title} by ${deletedBlog.author}!`,
       );
       setTimeout(() => {
         setNotificationMsg("");

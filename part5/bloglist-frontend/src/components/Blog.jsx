@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
 const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUserId }) => {
   const [visible, setVisible] = useState(false);
@@ -31,18 +32,21 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUserId }) => {
 
   const deleteBlog = async (event) => {
     event.preventDefault();
-    console.log('delete!', blog.id);
-    
+    console.log("delete!", blog.id);
+
     if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
       await handleDeleteBlog(blog.id);
     }
-  }
+  };
 
   const showDeleteButton = () => {
-    if (blog.user && (currentUserId === blog.user || currentUserId === blog.user.id)) {
-     return (<button onClick={deleteBlog}>delete</button>)
+    if (
+      blog.user &&
+      (currentUserId === blog.user || currentUserId === blog.user.id)
+    ) {
+      return <button onClick={deleteBlog}>delete</button>;
     }
-  }
+  };
 
   return (
     <div style={blogStyle}>
@@ -64,6 +68,13 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUserId }) => {
       </div>
     </div>
   );
+};
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  handleUpdateBlog: PropTypes.func.isRequired,
+  handleDeleteBlog: PropTypes.func.isRequired,
+  currentUserId: PropTypes.string.isRequired,
 };
 
 export default Blog;
