@@ -1,9 +1,10 @@
-POST http://localhost:3001/api/blogs
+PUT http://localhost:3001/api/blogs/664c9061388825242fb3b1aa
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjY0OGI4ZmI5NjIxMTVlNWIwMTFlODE3IiwiaWF0IjoxNzE2MjM4MjMyfQ.loeglgx5gw2hbbV-DcOg6nJN2zsmSGCAGg1Bu__A05I
 
 {
     "title": "EVIL DOES NOT EXIST",
     "author": "hamakuchi ryusuke",
-    "url": "https://expressjs.com/en/4x/api.html#req.body"
+    "url": "https://expressjs.com/en/4x/api.html#req.body",
+    "likes": 1
 }

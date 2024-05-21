@@ -16,7 +16,7 @@ blogsRouter.post("/", async (request, response) => {
   const user = request.user;
 
   if (!user) {
-    response.status(401).json({ error: "token invalid" });
+    return response.status(401).json({ error: "token invalid" });
   }
 
   const newBlogInfo = {
@@ -56,6 +56,13 @@ blogsRouter.delete("/:id", async (request, response) => {
 });
 
 blogsRouter.put("/:id", async (request, response) => {
+
+  const user = request.user;
+
+  if (!user) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+
   const updates = request.body;
   const updatedBlog = await Blog.findByIdAndUpdate(
     request.params.id,

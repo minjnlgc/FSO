@@ -36,7 +36,7 @@ loginRouter.post("/", async (request, response) => {
   // return the response with appropriate status code and content
   response
     .status(200)
-    .json({ token, username: returnedUser.username, name: returnedUser.name });
+    .json({ token, username: returnedUser.username, name: returnedUser.name, id: returnedUser.id });
 });
 
 module.exports = loginRouter;

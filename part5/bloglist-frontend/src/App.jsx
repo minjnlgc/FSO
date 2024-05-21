@@ -23,6 +23,9 @@ function App() {
     const getBlogs = async () => {
       if (user !== null) {
         const returnedBlogs = await blogService.getAll();
+
+        returnedBlogs.sort((a, b) => b.likes - a.likes);
+
         setBlogs(returnedBlogs);
         console.log("fetched blogs!");
       }
@@ -93,6 +96,8 @@ function App() {
       const newBlogs = blogs.concat(newBlog);
       setBlogs(newBlogs);
 
+      console.log('newBlog:', newBlog);
+
       setNotificationMsg(
         `a new blog ${newBlog.title} by ${newBlog.author} added`
       );
@@ -103,7 +108,6 @@ function App() {
       blogFormRef.current.toggleVisibility();
 
       console.log("new blog created!");
-
     } catch (exception) {
       setNotificationMsg(exception.response.data.error);
       setTimeout(() => {
@@ -111,6 +115,60 @@ function App() {
       }, 5000);
 
       console.log("error creating new blog!");
+    }
+  };
+
+  const handleUpdateBlog = async (id, updatedBlogObject) => {
+    try {
+      const updatedBlog = await blogService.update(id, updatedBlogObject);
+      const updatedBlogs = blogs.map((blog) => {
+        if (blog.id === id) {
+          return { ...updatedBlog };
+        }
+        return blog;
+      });
+
+      setBlogs(updatedBlogs);
+
+      console.log("updated blog!");
+    } catch (exception) {
+      setNotificationMsg(exception.response.data.error);
+      setTimeout(() => {
+        setNotificationMsg("");
+      }, 5000);
+
+      console.log("error updating blog!", exception.response.data.error);
+    }
+  };
+
+  const handleDeleteBlog = async (id) => {
+    try {
+      const deletedBlog = await blogService.remove(id);
+      const blogsAfterDelete = blogs.reduce((acc, blog) => {
+        if (blog.id !== deletedBlog.id) {
+          acc.push(blog);
+        }
+        return acc;
+      }, []);
+
+      console.log(blogsAfterDelete);
+
+      setBlogs(blogsAfterDelete);
+
+      setNotificationMsg(
+        `successfully deleted ${deletedBlog.title} by ${deletedBlog.author}!`
+      );
+      setTimeout(() => {
+        setNotificationMsg("");
+      }, 5000);
+    } catch (exception) {
+      console.log(exception);
+      setNotificationMsg(exception.response.data.error);
+      setTimeout(() => {
+        setNotificationMsg("");
+      }, 5000);
+
+      console.log("error deleting blog!", exception.response.data.error);
     }
   };
 
@@ -156,14 +214,20 @@ function App() {
           {user.name} logged in <button onClick={handleLogout}>logout</button>{" "}
         </p>
 
-        <Togglable label='new note' ref={blogFormRef}>
+        <Togglable label="new note" ref={blogFormRef}>
           <BlogForm handleCreateNewBlog={handleCreateNewBlog} />
         </Togglable>
 
-        <br />        
+        <br />
 
         {blogs.map((b) => (
-          <Blog key={b.id} blog={b} />
+          <Blog
+            key={b.id}
+            blog={b}
+            handleUpdateBlog={handleUpdateBlog}
+            handleDeleteBlog={handleDeleteBlog}
+            currentUserId={user.id}
+          />
         ))}
       </div>
     </>

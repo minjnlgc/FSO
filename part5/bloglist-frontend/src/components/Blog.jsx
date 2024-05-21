@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUserId }) => {
   const [visible, setVisible] = useState(false);
 
   const blogStyle = {
@@ -20,6 +20,30 @@ const Blog = ({ blog }) => {
     setVisible(!visible);
   };
 
+  const updateBlogLikes = async (event) => {
+    event.preventDefault();
+    await handleUpdateBlog(blog.id, {
+      ...blog,
+      likes: blog.likes + 1,
+      user: blog.user.id,
+    });
+  };
+
+  const deleteBlog = async (event) => {
+    event.preventDefault();
+    console.log('delete!', blog.id);
+    
+    if (window.confirm(`Remove ${blog.title} by ${blog.author}?`)) {
+      await handleDeleteBlog(blog.id);
+    }
+  }
+
+  const showDeleteButton = () => {
+    if (blog.user && (currentUserId === blog.user || currentUserId === blog.user.id)) {
+     return (<button onClick={deleteBlog}>delete</button>)
+    }
+  }
+
   return (
     <div style={blogStyle}>
       <p style={hideWhenVisible}>
@@ -33,9 +57,10 @@ const Blog = ({ blog }) => {
         </p>
         <p>{blog.url}</p>
         <p>
-          {blog.likes} <button>like</button>{" "}
+          {blog.likes} <button onClick={updateBlogLikes}>like</button>
         </p>
         <p>{blog.author}</p>
+        {showDeleteButton()}
       </div>
     </div>
   );

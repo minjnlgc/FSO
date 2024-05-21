@@ -1,0 +1,12 @@
+POST http://localhost:3001/api/blogs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjY0N2Q1MGMxYmQ3YjgzMGQ2MmFiMzg4IiwiaWF0IjoxNzE2MDMyNjYxfQ.oNYsBkjdCYDx1Bx4EDhjF8DDMAmKNpMc49MKYC4u29A
+
+// 6648b8fb962115e5b011e817
+{
+  "user": "6648b8fb962115e5b011e817",
+  "likes": 1,
+  "author": "Joel Spolsky",
+  "title": "The Joel Test: 12 Steps to Better Code",
+  "url": "https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code/"
+}
