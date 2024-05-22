@@ -26,31 +26,31 @@ const BlogForm = ({ handleCreateNewBlog }) => {
         <div>
           title
           <input
+            data-testid='title'
             type="text"
             name="Title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
-            placeholder='title-input'
           />
         </div>
         <div>
           author
           <input
+            data-testid='author'
             type="text"
             name="Author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
-            placeholder='author-input'
           />
         </div>
         <div>
           url
           <input
+            data-testid='url'
             type="text"
             name="Url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
-            placeholder='url-input'
           />
         </div>
         <button onClick={addBlog}>create</button>

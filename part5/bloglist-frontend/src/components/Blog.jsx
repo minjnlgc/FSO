@@ -63,7 +63,7 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUserId }) => {
           {blog.title} <button onClick={viewVisibility}>hide</button>
         </p>
         <p>{blog.url}</p>
-        <p>
+        <p data-testid='likes'>
           {blog.likes} <button onClick={updateBlogLikes}>like</button>
         </p>
         <p>{blog.author}</p>

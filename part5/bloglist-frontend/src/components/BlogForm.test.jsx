@@ -13,9 +13,9 @@ describe("<BlogForm />", () => {
     
         render(<BlogForm handleCreateNewBlog={createBlog} />);
         
-        const titleInput = screen.getByPlaceholderText('title-input');
-        const authorInput = screen.getByPlaceholderText('author-input');
-        const urlInput = screen.getByPlaceholderText('url-input');
+        const titleInput = screen.getByPlaceholderText('title');
+        const authorInput = screen.getByPlaceholderText('author');
+        const urlInput = screen.getByPlaceholderText('url');
 
         const createButton = screen.getByText('create')
 
