@@ -16,12 +16,12 @@ describe("Blog app", () => {
     });
 
     await request.post("/api/users", {
-        data: {
-          username: "test",
-          name: "test test",
-          password: "12345678",
-        },
-      });
+      data: {
+        username: "test",
+        name: "test test",
+        password: "12345678",
+      },
+    });
 
     await page.goto("");
   });
@@ -98,60 +98,86 @@ describe("Blog app", () => {
         const testBlog = await page.getByText(`${title} ${author}`);
         await testBlog.getByRole("button", { name: "View" }).click();
 
-         page.on("dialog", async (dialog) => {
-            expect(dialog.type()).toContain("confirm");
-            expect(dialog.message()).toEqual(`Remove ${title} by ${author}?`);
-            await dialog.accept();
-          });
+        page.on("dialog", async (dialog) => {
+          expect(dialog.type()).toContain("confirm");
+          expect(dialog.message()).toEqual(`Remove ${title} by ${author}?`);
+          await dialog.accept();
+        });
 
         await page.getByRole("button", { name: "delete" }).click();
-        await expect(page.getByText(`successfully deleted ${title} by ${author}!`)).toBeVisible();
+        await expect(
+          page.getByText(`successfully deleted ${title} by ${author}!`)
+        ).toBeVisible();
         await expect(page.getByText(`${title} hide`)).not.toBeVisible();
       });
 
-      test("user who did not create the blog cannot see the delete button", async ({ page }) => {
-        await page.getByRole('button', { name: 'logout' }).click();
-        await loginWith(page, 'test', '12345678');
+      test("user who did not create the blog cannot see the delete button", async ({
+        page,
+      }) => {
+        await page.getByRole("button", { name: "logout" }).click();
+        await loginWith(page, "test", "12345678");
 
         const testBlog = await page.getByText(`${title} ${author}`);
         await testBlog.getByRole("button", { name: "View" }).click();
 
-        await expect(page.getByRole('button', { name: 'delete' })).not.toBeVisible();
+        await expect(
+          page.getByRole("button", { name: "delete" })
+        ).not.toBeVisible();
       });
     });
 
-    test('blogs listed in the descending order according to the likes', async ({ page }) => {
+    test("blogs listed in the descending order according to the likes", async ({
+      page,
+    }) => {
+      test.slow();
 
-        test.slow();
+      await createBlog(page, "least like blog", "last", "last.com");
+      await page
+        .getByText("least like blog")
+        .getByRole("button", { name: "View" })
+        .click();
+      await page.getByRole("button", { name: "like" }).click();
 
-        await createBlog(page, 'least like blog', 'last', 'last.com');
-        await page.getByText('least like blog').getByRole('button', {name: 'View'}).click();
-        await page.getByRole('button', {name: 'like'}).click();
+      await createBlog(page, "most like blog", "first", "first.com");
+      await page
+        .getByText("most like blog")
+        .getByRole("button", { name: "View" })
+        .click();
+      await page.getByRole("button", { name: "like" }).nth(1).click();
+      await page.waitForTimeout(500); // Wait for the like to be updated
+      await page.getByRole("button", { name: "like" }).nth(1).click();
+      await page.waitForTimeout(500); // Wait for the like to be updated
+      await page.getByRole("button", { name: "like" }).nth(1).click();
 
+      await createBlog(page, "middle like blog", "mid", "mid.com");
+      await page
+        .getByText("middle like blog")
+        .getByRole("button", { name: "View" })
+        .click();
+      await page.getByRole("button", { name: "like" }).nth(2).click();
+      await page.waitForTimeout(500); // Wait for the like to be updated
+      await page.getByRole("button", { name: "like" }).nth(2).click();
+      await page.waitForTimeout(500); // Wait for the like to be updated
 
-        await createBlog(page, 'most like blog', 'first', 'first.com');
-        await page.getByText('most like blog').getByRole('button', {name: 'View'}).click();
-        await page.getByRole('button', {name: 'like'}).nth(1).click();
-        await page.waitForTimeout(500); // Wait for the like to be updated
-        await page.getByRole('button', {name: 'like'}).nth(1).click();
-        await page.waitForTimeout(500); // Wait for the like to be updated
-        await page.getByRole('button', {name: 'like'}).nth(1).click();
+      await page.reload();
 
-        await createBlog(page, 'middle like blog', 'mid', 'mid.com');
-        await page.getByText('middle like blog').getByRole('button', {name: 'View'}).click();
-        await page.getByRole('button', {name: 'like'}).nth(2).click();
-        await page.waitForTimeout(500); // Wait for the like to be updated
-        await page.getByRole('button', {name: 'like'}).nth(2).click();
-        await page.waitForTimeout(500); // Wait for the like to be updated
+      await page
+        .getByText("most like blog")
+        .getByRole("button", { name: "View" })
+        .click();
+      await page
+        .getByText("middle like blog")
+        .getByRole("button", { name: "View" })
+        .click();
+      await page
+        .getByText("least like blog")
+        .getByRole("button", { name: "View" })
+        .click();
 
-        await page.reload();
-        
-        await page.getByText('most like blog').getByRole('button', {name: 'View'}).click();
-        await page.getByText('middle like blog').getByRole('button', {name: 'View'}).click();
-        await page.getByText('least like blog').getByRole('button', {name: 'View'}).click();
-        
-        const likes = await page.locator('[data-testid="likes"]').allTextContents();
-        expect(likes).toEqual(['3 like', '2 like', '1 like']);
+      const likes = await page
+        .locator('[data-testid="likes"]')
+        .allTextContents();
+      expect(likes).toEqual(["3 like", "2 like", "1 like"]);
     });
   });
 });
