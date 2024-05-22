@@ -50,12 +50,15 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUserId }) => {
 
   return (
     <div style={blogStyle}>
-      <p style={hideWhenVisible}>
-        {blog.title} {blog.author}
-        <button onClick={viewVisibility}>View</button>
-      </p>
 
-      <div style={showWhenVisible}>
+      <div style={hideWhenVisible} className="blog-default-view">
+        <p>
+          {blog.title} {blog.author}
+          <button onClick={viewVisibility}>View</button>
+        </p>
+      </div>
+
+      <div style={showWhenVisible} className="blog-hide-content">
         <p>
           {blog.title} <button onClick={viewVisibility}>hide</button>
         </p>
@@ -66,6 +69,7 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, currentUserId }) => {
         <p>{blog.author}</p>
         {showDeleteButton()}
       </div>
+
     </div>
   );
 };
