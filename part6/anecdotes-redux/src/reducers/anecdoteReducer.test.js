@@ -6,13 +6,11 @@ describe('anecdoteReducer', () => {
 
     const stateAtStart = initialState;
 
-    test('vote anecdote with action VOTE', () => {
+    test('vote anecdote with action anecdote/voteAnecdote', () => {
         const expectedContainState = {...stateAtStart[0], vote: stateAtStart[0].vote + 1}
         const action = {
-            type: 'VOTE',
-            payload: {
-                id: stateAtStart[0].id
-            }
+            type: 'anecdote/voteAnecdote',
+            payload: stateAtStart[0].id
         }
 
         deepFreeze(stateAtStart);
@@ -22,21 +20,19 @@ describe('anecdoteReducer', () => {
         expect(stateAtEnd).toContainEqual(expectedContainState);
     });
 
-    test('return new state with action NEW_ANECDOTE', () => {
+    test('return new state with action anecdote/addAnecdote', () => {
         const anecdoteToAdd = {
-            content: 'i dont know what are you talking about',
-            vote: 0,
-            id: 34145
+            content: 'i dont know what are you talking about'
         }
         const action = {
-            type: 'NEW_ANECDOTE',
-            payload: anecdoteToAdd
+            type: 'anecdote/addAnecdote',
+            payload: anecdoteToAdd.content
         }
 
         deepFreeze(stateAtStart)
         const stateAtEnd = anecdoteReducer(stateAtStart, action);
 
         expect(stateAtEnd).toHaveLength(stateAtStart.length + 1);
-        expect(stateAtEnd).toContainEqual(anecdoteToAdd);
+        expect(stateAtEnd.map(a => a.content)).toContainEqual(anecdoteToAdd.content);
     })
 })
