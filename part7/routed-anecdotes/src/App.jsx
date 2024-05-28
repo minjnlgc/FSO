@@ -3,6 +3,12 @@ import "./App.css";
 
 import { Link, Routes, Route, useMatch, Navigate } from "react-router-dom";
 
+import About from "./components/About";
+import Footer from "./components/Footer";
+import Notification from "./components/Notification";
+
+import { useField } from "./hooks";
+
 const Menu = () => {
   const padding = {
     paddingRight: 5,
@@ -50,61 +56,36 @@ const AnecdoteList = ({ anecdotes }) => {
   );
 };
 
-const About = () => (
-  <div>
-    <h2>About anecdote app</h2>
-    <p>According to wikipedia</p>
-
-    <em>
-      An anecdote is a brief, revealing account of an individual person or an
-      incident. Occasionally humorous, anecdotes differ from jokes because their
-      primary purpose is not simply to provoke laughter but to reveal a truth
-      more general than the brief tale itself, such as to characterize a person
-      by delineating a specific quirk or trait, to communicate an abstract idea
-      about a person, place, or thing through the concrete details of a short
-      narrative. An anecdote is "a story with a point."
-    </em>
-
-    <p>
-      Software engineering is full of excellent anecdotes, at this app you can
-      find the best and add more.
-    </p>
-  </div>
-);
-
-const Footer = () => (
-  <div>
-    Anecdote app for <a href="https://fullstackopen.com/">Full Stack Open</a>.
-    See
-    <a href="https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js">
-      https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js
-    </a>
-    for the source code.
-  </div>
-);
-
 const CreateNew = (props) => {
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
+  const content = useField("text");
+  const author = useField("text");
+  const info = useField("text");
 
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (content !== "" && author !== "" && info !== "") {
+    if (
+      content.input.value !== "" &&
+      author.input.value !== "" &&
+      info.input.value !== ""
+    ) {
       setIsSubmitted(true);
       props.addNew({
-        content,
-        author,
-        info,
+        content: content.input.value,
+        author: author.input.value,
+        info: info.input.value,
         votes: 0,
       });
 
-      setContent("");
-      setAuthor("");
-      setInfo("");
+      handleReset();
     }
+  };
+
+  const handleReset = () => {
+    content.reset();
+    author.reset();
+    info.reset();
   };
 
   if (isSubmitted) {
@@ -117,47 +98,24 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input
-            name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
+          <input {...content.input} />
         </div>
         <div>
           author
-          <input
-            name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
+          <input {...author.input} />
         </div>
         <div>
           url for more info
-          <input
-            name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
-          />
+          <input {...info.input} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   );
 };
 
-const Notification = ({ notification }) => {
-  const style = {
-    border: "solid",
-    padding: 10,
-    margin: 15,
-    borderWidth: 1.5,
-    borderRadius: 10,
-    color: "purple",
-  };
-  return notification && <div style={style}>{notification}</div>
-}
-
-function App() {
+const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
       content: "If it hurts, do it more often",
@@ -188,8 +146,8 @@ function App() {
 
     setNotification(`a new anecdote '${anecdote.content}' created!`);
     setTimeout(() => {
-      setNotification('');
-    }, 5000)
+      setNotification("");
+    }, 5000);
   };
 
   const anecdoteById = (id) => {
@@ -211,7 +169,7 @@ function App() {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
-      <Notification notification={notification}/>
+      <Notification notification={notification} />
       <Routes>
         <Route
           path="/anecdotes/:id"
@@ -227,6 +185,6 @@ function App() {
       <Footer />
     </div>
   );
-}
+};
 
 export default App;
