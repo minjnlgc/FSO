@@ -27,7 +27,8 @@ const blogSlice = createSlice({
   },
 });
 
-export const { setBlog, addBlog, likeBlog, removeBlogFromState } = blogSlice.actions;
+export const { setBlog, addBlog, likeBlog, removeBlogFromState } =
+  blogSlice.actions;
 export default blogSlice.reducer;
 
 export const initialiseBlog = () => {
@@ -56,11 +57,11 @@ export const updateBlogLike = (id) => {
   };
 };
 
-export const deleteBlogFromServer  = (id) => {
+export const deleteBlogFromServer = (id) => {
   return async (dispatch) => {
     const deletedBlog = await blogService.remove(id);
     console.log(deletedBlog);
-    
+
     dispatch(removeBlogFromState(deletedBlog));
   };
 };
