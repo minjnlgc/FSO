@@ -56,19 +56,23 @@ blogsRouter.delete("/:id", async (request, response) => {
 });
 
 blogsRouter.put("/:id", async (request, response) => {
-
   const user = request.user;
 
   if (!user) {
-    return response.status(401).json({ error: 'token invalid' })
+    return response.status(401).json({ error: "token invalid" });
   }
 
   const updates = request.body;
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    request.params.id,
-    { $set: updates },
-    { new: true, runValidators: true }
-  );
+  const blog = {
+    title: updates.title,
+    author: updates.author,
+    url: updates.url,
+    likes: updates.likes,
+  };
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+    new: true,
+    runValidators: true,
+  });
 
   if (updatedBlog) {
     response.status(200).json(updatedBlog);
