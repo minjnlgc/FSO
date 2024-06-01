@@ -1,7 +1,10 @@
 const Footer = () => {
-    return <footer>
-         <p>© 2024 Your Company. All rights reserved.</p>
+  return (
+    <footer className="mt-5 mb-5">
+      <p className="text-center fw-light">{`© 2024 No right reserved :(`}</p>
+      <br />
     </footer>
-}
+  );
+};
 
 export default Footer;

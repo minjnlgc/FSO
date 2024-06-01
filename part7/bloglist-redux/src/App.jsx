@@ -53,7 +53,7 @@ const App = () => {
   }
 
   return (
-    <div className="container bg-light">
+    <div className="container bg-light vh-100">
       <Menu user={user} handleLogout={handleLogout}/>
       <Notification />
       <Routes>
@@ -62,6 +62,7 @@ const App = () => {
         <Route path="/" element={<Home user={user} />}></Route>
         <Route path="/blogs/:id" element={<BlogView blogs={blogs}/>}></Route>
       </Routes>
+      <Footer />
     </div>
   );
 };
