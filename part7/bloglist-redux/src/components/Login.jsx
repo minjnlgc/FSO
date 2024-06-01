@@ -11,10 +11,7 @@ const Login = () => {
 
   const handleLogin = (event) => {
     event.preventDefault();
-
     dispatch(loginOnServer({ username, password }));
-    dispatch(showNotificationWithTimeout("login successfully!", 5000));
-
     setPassword("");
     setUsername("");
   };

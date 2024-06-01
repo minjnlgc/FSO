@@ -7,9 +7,9 @@ const Notification = () => {
   console.log(notificationMsg);
 
   const styleClass =
-  notificationMsg.includes("fail") ||
-  notificationMsg.includes("error") ||
-  notificationMsg.includes("invalid")
+  notificationMsg.toLowerCase().includes("fail") ||
+  notificationMsg.toLowerCase().includes("error") ||
+  notificationMsg.toLowerCase().includes("invalid")
       ? "fail"
       : "success";
 

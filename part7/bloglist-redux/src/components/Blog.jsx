@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { deleteBlogFromServer, updateBlogLike } from "../reducers/blogReducer";
+import { deleteBlogFromServer } from "../reducers/blogReducer";
 import { showNotificationWithTimeout } from "../reducers/notificationReducer";
+
+import { Link } from "react-router-dom";
 
 const Blog = ({ blog, currentUserId }) => {
   const [visible, setVisible] = useState(false);
@@ -18,17 +20,12 @@ const Blog = ({ blog, currentUserId }) => {
     borderColor: "#DCDCDC",
   };
 
-  const hideWhenVisible = { display: visible ? "none" : "" };
-  const showWhenVisible = { display: visible ? "" : "none" };
+  // const hideWhenVisible = { display: visible ? "none" : "" };
+  // const showWhenVisible = { display: visible ? "" : "none" };
 
-  const viewVisibility = () => {
-    setVisible(!visible);
-  };
-
-  const handleUpdateBlogLikes = (event) => {
-    event.preventDefault();
-    dispatch(updateBlogLike(blog.id));
-  };
+  // const viewVisibility = () => {
+  //   setVisible(!visible);
+  // };
 
   const handleDeleteBlog = async (event) => {
     event.preventDefault();
@@ -57,16 +54,19 @@ const Blog = ({ blog, currentUserId }) => {
 
   return (
     <div style={blogStyle}>
-      <div style={hideWhenVisible} className="blog-default-view">
+      <div className="blog-default-view">
         <p>
-          {blog.title} {blog.author}
-          <button onClick={viewVisibility}>View</button>
+          <Link to={`/blogs/${blog.id}`}>
+            {blog.title} {blog.author}
+          </Link>
+          {/* <button onClick={viewVisibility}>View</button> */}
         </p>
       </div>
 
-      <div style={showWhenVisible} className="blog-hide-content">
+      {/* <div style={showWhenVisible} className="blog-hide-content">
         <p>
-          {blog.title} <button onClick={viewVisibility}>hide</button>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          <button onClick={viewVisibility}>hide</button>
         </p>
         <p>{blog.url}</p>
         <p data-testid="likes">
@@ -74,7 +74,7 @@ const Blog = ({ blog, currentUserId }) => {
         </p>
         <p>{blog.author}</p>
         {showDeleteButton()}
-      </div>
+      </div> */}
     </div>
   );
 };

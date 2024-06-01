@@ -19,6 +19,8 @@ blogsRouter.post("/", async (request, response) => {
     return response.status(401).json({ error: "token invalid" });
   }
 
+  const userDb = await User.findById(user._id);
+
   const newBlogInfo = {
     ...request.body,
     user: user._id,
@@ -26,6 +28,10 @@ blogsRouter.post("/", async (request, response) => {
 
   const newBlog = new Blog(newBlogInfo);
   const savedBlog = await newBlog.save();
+
+  userDb.blogs = userDb.blogs.concat(savedBlog._id);
+  await userDb.save()
+
   response.status(201).json(savedBlog);
 });
 
