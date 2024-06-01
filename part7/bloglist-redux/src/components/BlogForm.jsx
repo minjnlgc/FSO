@@ -3,6 +3,10 @@ import { useDispatch } from "react-redux";
 import { createBlog } from "../reducers/blogReducer";
 import { showNotificationWithTimeout } from "../reducers/notificationReducer";
 
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Card from 'react-bootstrap/Card';
+
 const BlogForm = ({ blogFormRef }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
@@ -40,46 +44,53 @@ const BlogForm = ({ blogFormRef }) => {
     setTitle("");
     setAuthor("");
     setUrl("");
-    
-    blogFormRef.current.toggleVisibility()
+
+    blogFormRef.current.toggleVisibility();
   };
 
   return (
     <div>
-      <h2>create new</h2>
-      <form>
-        <div>
-          title
-          <input
+      <Card className="mt-4">
+      <Card.Body>
+        <Card.Title>Create new blog</Card.Title>
+        <Form>
+        <Form.Group className="mb-3" controlId="formBasicTitle">
+          <Form.Label>Title</Form.Label>
+          <Form.Control
             data-testid="title"
             type="text"
             name="Title"
             value={title}
             onChange={handleTitleChange}
           />
-        </div>
-        <div>
-          author
-          <input
+        </Form.Group>
+
+        <Form.Group className="mb-3" controlId="formBasicAuthor">
+          <Form.Label>Author</Form.Label>
+          <Form.Control
             data-testid="author"
             type="text"
             name="Author"
             value={author}
             onChange={handleAuthorChange}
           />
-        </div>
-        <div>
-          url
-          <input
+        </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicUrl">
+          <Form.Label>URL</Form.Label>
+          <Form.Control
             data-testid="url"
             type="text"
             name="Url"
             value={url}
             onChange={handleUrlChange}
           />
-        </div>
-        <button onClick={handleCreateNewBlog}>create</button>
-      </form>
+        </Form.Group>
+        <Button variant="primary" type="submit" onClick={handleCreateNewBlog}>
+          Create
+        </Button>
+      </Form>
+      </Card.Body>
+    </Card>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import storage from "../services/storage";
 import blogService from "../services/blogs";
 import loginService from "../services/login";
+import commentService from "../services/comments";
 import { showNotificationWithTimeout } from "./notificationReducer";
 
 const userSlice = createSlice({
@@ -23,6 +24,7 @@ export const initialiseUser = () => {
     if (user) {
       dispatch(setUser(user));
       blogService.setToken(user.token);
+      commentService.setToken(user.token);
     }
   };
 };
@@ -33,6 +35,7 @@ export const loginOnServer = (credentials) => {
       const user = await loginService.login(credentials);
       storage.saveUser(user);
       blogService.setToken(user.token);
+      commentService.setToken(user.token);
       dispatch(setUser(user));
       dispatch(showNotificationWithTimeout("Login successfully!", 5000));
     } catch (error) {

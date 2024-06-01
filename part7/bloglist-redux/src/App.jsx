@@ -15,6 +15,8 @@ import Notification from "./components/Notification";
 import Login from "./components/Login";
 import BlogView from "./components/BlogView";
 import Menu from "./components/Menu";
+import Container from "react-bootstrap/esm/Container";
+import Footer from "./components/Footer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -42,28 +44,25 @@ const App = () => {
 
   if (user === null) {
     return (
-      <>
-        <h2>log in to application</h2>
+      <Container>
+        <h2 className="display-6 mt-3 mb-4 ms-2">Log in to application</h2>
         <Notification />
         <Login />
-      </>
+      </Container>
     );
   }
 
   return (
-    <>
+    <div className="container bg-light">
       <Menu user={user} handleLogout={handleLogout}/>
-      <h2>blog app</h2>
       <Notification />
-      
-
       <Routes>
         <Route path="/users" element={<Users users={users}/>}></Route>
         <Route path="/users/:id" element={<User users={users}/>}></Route>
         <Route path="/" element={<Home user={user} />}></Route>
         <Route path="/blogs/:id" element={<BlogView blogs={blogs}/>}></Route>
       </Routes>
-    </>
+    </div>
   );
 };
 

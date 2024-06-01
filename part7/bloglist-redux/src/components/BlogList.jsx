@@ -2,6 +2,9 @@ import { useSelector } from "react-redux";
 import Blog from "./Blog";
 import { useMemo } from "react";
 
+import ListGroup from "react-bootstrap/ListGroup";
+
+
 const BlogList = ({ user }) => {
   const blogs = useSelector((state) => state.blogs);
   const sortedBlogs = useMemo(() => {
@@ -10,9 +13,11 @@ const BlogList = ({ user }) => {
 
   return (
     <div>
-      {sortedBlogs.map((b) => (
-        <Blog key={b.id} blog={b} currentUserId={user.id} />
-      ))}
+      <ListGroup as="ul">
+        {sortedBlogs.map((b) => (
+          <Blog key={b.id} blog={b} currentUserId={user.id} />
+        ))}
+      </ListGroup>
     </div>
   );
 };

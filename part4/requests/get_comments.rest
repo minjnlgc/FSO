@@ -1,0 +1,2 @@
+GET http://localhost:3001/api/blogs/665af559ad779f697dbfded4/comment
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxhcyIsImlkIjoiNjY0N2Q1MGMxYmQ3YjgzMGQ2MmFiMzg4IiwiaWF0IjoxNzE2MDMyNjYxfQ.oNYsBkjdCYDx1Bx4EDhjF8DDMAmKNpMc49MKYC4u29A
