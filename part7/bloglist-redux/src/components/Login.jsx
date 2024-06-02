@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { loginOnServer } from "../reducers/userReducer";
 import { useDispatch } from "react-redux";
-import { showNotificationWithTimeout } from "../reducers/notificationReducer";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Container from "react-bootstrap/esm/Container";
