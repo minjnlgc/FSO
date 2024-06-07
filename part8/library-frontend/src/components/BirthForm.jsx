@@ -13,6 +13,8 @@ const BirthForm = ({ authors }) => {
   const submit = (event) => {
     event.preventDefault();
 
+    console.log(name, born);
+
     changeBorn({ variables: { name, born } });
 
     setName("");
@@ -27,10 +29,12 @@ const BirthForm = ({ authors }) => {
           authors:
           <select
             name="selectedAuthor"
-            onChange={(e) => setName(e.target.value)}
+            onChange={({ target }) => setName(target.value)}
+            value={name}
           >
+            <option value="">Select an author</option>
             {authors.map((a) => (
-              <option key={a.name}>{a.name}</option>
+              <option key={a.name} value={a.name}>{a.name}</option>
             ))}
           </select>
         </label>
