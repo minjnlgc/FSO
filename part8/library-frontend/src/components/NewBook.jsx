@@ -1,6 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { useState } from "react";
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from "../queries";
+import { updateCache } from "../App";
 
 const NewBook = (props) => {
   const [title, setTitle] = useState("");
@@ -14,10 +15,21 @@ const NewBook = (props) => {
       console.error(error);
     },
     update: (cache, response) => {
-      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-        return {
-          allBooks: allBooks.concat(response.data.addBook),
-        };
+      const newBook = response.data.addBook;
+
+      updateCache(cache, { query: ALL_BOOKS }, newBook)
+
+      cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
+        console.log('try update author...');
+        const authorExists = allAuthors.some(
+          (a) => a.name === newBook.author.name
+        );
+        console.log('authorExists:', authorExists);
+        if (!authorExists) {
+          return {
+            allAuthors: allAuthors.concat(newBook.author),
+          };
+        }
       });
     },
   });
