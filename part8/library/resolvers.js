@@ -33,12 +33,12 @@ const resolvers = {
       return context.currentUser;
     },
   },
-  Author: {
-    bookCount: async (root, args) => {
-      const books = await Book.find({ author: root._id });
-      return books ? books.length : 0;
-    },
-  },
+  // Author: {
+  //   bookCount: async (root, args) => {
+  //     const books = await Book.find({ author: root._id });
+  //     return books ? books.length : 0;
+  //   },
+  // },
   Book: {
     author: async (root) => {
       return await Author.findById(root.author);
@@ -62,6 +62,19 @@ const resolvers = {
           await author.save();
         } catch (error) {
           throw new GraphQLError("Saving author failed", {
+            extensions: {
+              code: "BAD_USER_INPUT",
+              invalidArgs: args.name,
+              error,
+            },
+          });
+        }
+      } else {
+        author.bookCount += 1;
+        try {
+          await author.save();
+        } catch (error) {
+          throw new GraphQLError("Updating author book count failed", {
             extensions: {
               code: "BAD_USER_INPUT",
               invalidArgs: args.name,
