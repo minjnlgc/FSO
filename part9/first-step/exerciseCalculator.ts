@@ -1,4 +1,4 @@
-interface exerciseInfo {
+export interface exerciseInfo {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -8,7 +8,7 @@ interface exerciseInfo {
   ratingDescription: string;
 }
 
-interface exerciseInput {
+export interface exerciseInput {
   dailyHoursArr: number[];
   target: number;
 }
@@ -24,7 +24,7 @@ const parseExerciseArguments = (args: string[]): exerciseInput => {
   }, true);
 
   if (isInputTypeValid) {
-    const dailyHoursArr = args.slice(3).reduce((acc, e) => {
+    const dailyHoursArr = args.slice(3).reduce((acc: number[], e) => {
       acc.push(Number(e));
       return acc;
     }, []);
@@ -38,7 +38,7 @@ const parseExerciseArguments = (args: string[]): exerciseInput => {
   }
 };
 
-const calculateExercises = (dailyHoursArr: number[], target: number) => {
+export const calculateExercises = (dailyHoursArr: number[], target: number): exerciseInfo => {
   const periodLength: number = dailyHoursArr.length;
   const trainingDays: number = dailyHoursArr.reduce((acc, h) => {
     if (h !== 0) {
@@ -61,7 +61,7 @@ const calculateExercises = (dailyHoursArr: number[], target: number) => {
     rating = 2;
     ratingDescription = "not too bad but could be better";
   } else {
-    rating = 3;
+    rating = 1;
     ratingDescription = "hmmmm...";
   }
 
