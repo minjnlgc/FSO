@@ -13,9 +13,23 @@ router.post("/", (req, res) => {
     const newPatientEntry = toNewPatientEntry(req.body);
     const newNonSensitivePatient = patientService.addPatient(newPatientEntry);
     res.json(newNonSensitivePatient);
-    
   } catch (error: unknown) {
     console.log("error");
+  }
+});
+
+router.get("/:id", (req, res) => {
+  try {
+    const patient = patientService.getPatientById(req.params.id);
+    res.json(patient);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      res.status(400).json({ error: error.message });
+    } else {
+      console.error("Unknown error:", error);
+      res.status(500).json({ error: "An unknown error occured." });
+    }
   }
 });
 
