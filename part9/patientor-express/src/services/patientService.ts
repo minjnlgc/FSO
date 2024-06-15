@@ -4,10 +4,7 @@ import { v1 as uuidv1 } from "uuid";
 import { Patient, NonSensitivePatientEntry, NewPatientEntry } from "../types";
 import { toNonSensitivePatient } from "../utils";
 
-const patients: Patient[] = patientData.map((p) => ({
-  ...p,
-  entries: [],
-}));
+const patients: Patient[] = patientData;
 
 const getAllPatients = (): NonSensitivePatientEntry[] => {
   console.log(patients);

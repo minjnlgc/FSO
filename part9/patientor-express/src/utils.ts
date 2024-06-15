@@ -3,6 +3,7 @@ import {
   NonSensitivePatientEntry,
   NewPatientEntry,
   Gender,
+  Entry,
 } from "./types";
 
 const isString = (text: unknown): text is string => {
@@ -54,6 +55,38 @@ const parseGender = (gender: unknown): Gender => {
   return gender;
 };
 
+const isEntry = (entry: unknown): entry is Entry => {
+  if (typeof entry !== "object" || !entry) {
+    throw new Error("Incorrect entry: " + entry);
+  }
+  if (!("type" in entry)) {
+    throw new Error("Incorrect entry: " + entry);
+  }
+
+  if (
+    entry.type === "Hospital" ||
+    entry.type === "HealthCheck" ||
+    entry.type === "OccupationalHealthcare"
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const parseEntries = (entries: unknown): Entry[] => {
+  if (!Array.isArray(entries)) {
+    throw new Error("Invalid entries: not an array");
+  }
+
+  entries.forEach((entry) => {
+    if (!isEntry(entry)) {
+      throw new Error("Invalid entry: " + JSON.stringify(entry));
+    }
+  });
+
+  return entries;
+};
+
 export const toNonSensitivePatient = (
   patient: Patient
 ): NonSensitivePatientEntry => {
@@ -82,7 +115,8 @@ export const toNewPatientEntry = (object: unknown): NewPatientEntry => {
     "occupation" in object &&
     "dateOfBirth" in object &&
     "gender" in object &&
-    "ssn" in object
+    "ssn" in object &&
+    "entries" in object
   ) {
     const newPatient = {
       name: parseName(object.name),
@@ -90,7 +124,7 @@ export const toNewPatientEntry = (object: unknown): NewPatientEntry => {
       dateOfBirth: parseDate(object.dateOfBirth),
       gender: parseGender(object.gender),
       ssn: parseSsn(object.ssn),
-      entries: []
+      entries: parseEntries(object.entries),
     };
 
     return newPatient;

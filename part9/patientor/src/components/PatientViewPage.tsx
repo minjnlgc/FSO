@@ -2,6 +2,8 @@ import { Typography } from "@mui/material";
 import { Gender, Patient } from "../types";
 import { useEffect, useState } from "react";
 
+import EntryView from "./EntryView";
+
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";
 import TransgenderIcon from "@mui/icons-material/Transgender";
@@ -29,10 +31,11 @@ const PatientViewPage = ({ patientId }: Props) => {
   const [patient, setPatient] = useState<Patient | null>(null);
 
   useEffect(() => {
-    console.log("use effect");
     const fetchPatientById = async () => {
       if (!patientId) return;
       const returnedPatient = await patientService.getById(patientId);
+      console.log(returnedPatient);
+
       setPatient(returnedPatient);
     };
 
@@ -45,11 +48,15 @@ const PatientViewPage = ({ patientId }: Props) => {
 
   return (
     <div>
-      <Typography variant="h6" style={{ marginTop: "0.5em" }}>
+      <Typography variant="h4" style={{ marginTop: "1em" }}>
         {patient.name} {showGender(patient.gender)}
       </Typography>
-      <p>ssh: {patient.ssn}</p>
-      <p>occupation: {patient.occupation}</p>
+      <Typography variant="body1" style={{ marginTop: "0.5em" }}>
+        ssh: {patient.ssn}
+      </Typography>
+      <Typography variant="body1">occupation: {patient.occupation}</Typography>
+      
+      <EntryView entries={patient.entries} />
     </div>
   );
 };
