@@ -2,7 +2,7 @@ import { Typography } from "@mui/material";
 import { Gender, Patient } from "../types";
 import { useEffect, useState } from "react";
 
-import EntryView from "./EntryView";
+import EntryView from "./EntryView/EntryView";
 
 import FemaleIcon from "@mui/icons-material/Female";
 import MaleIcon from "@mui/icons-material/Male";

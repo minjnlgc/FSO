@@ -33,4 +33,20 @@ router.get("/:id", (req, res) => {
   }
 });
 
+router.post("/:id/entires", (req, res) => {
+  try {
+    const patient = patientService.createPatientEntry(req.params.id, req.body);
+    console.log(req.body);
+    res.json(patient);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(error.message);
+      res.status(400).json({ error: error.message });
+    } else {
+      console.error("Unknown error:", error);
+      res.status(500).json({ error: "An unknown error occured." });
+    }
+  }
+});
+
 export default router;

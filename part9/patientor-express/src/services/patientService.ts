@@ -1,10 +1,14 @@
 import patientData from "../../data/patients";
 import { v1 as uuidv1 } from "uuid";
 
-import { Patient, NonSensitivePatientEntry, NewPatientEntry } from "../types";
-import { toNonSensitivePatient } from "../utils";
+import {
+  Patient,
+  NonSensitivePatientEntry,
+  NewPatientEntry,
+} from "../types";
+import { toNewEntry, toNonSensitivePatient } from "../utils";
 
-const patients: Patient[] = patientData;
+let patients: Patient[] = patientData;
 
 const getAllPatients = (): NonSensitivePatientEntry[] => {
   console.log(patients);
@@ -38,8 +42,29 @@ const getPatientById = (id: string): Patient => {
   return patient;
 };
 
+const createPatientEntry = (id: string, entryData: unknown): Patient => {
+  const patient = getPatientById(id);
+  try {
+    const newEntryData = {
+      ...toNewEntry(entryData),
+      id: uuidv1(),
+    };
+    patient.entries = patient.entries.concat(newEntryData);
+    patients = patients.map((p) => (p.id === patient.id ? patient : p));
+    return patient;
+
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to update patient entry: ${error.message}`);
+    } else {
+      throw new Error(`Unknown error: ${error}`);
+    }
+  }
+};
+
 export default {
   getAllPatients,
   addPatient,
   getPatientById,
+  createPatientEntry,
 };
