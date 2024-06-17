@@ -33,7 +33,7 @@ router.get("/:id", (req, res) => {
   }
 });
 
-router.post("/:id/entires", (req, res) => {
+router.post("/:id/entries", (req, res) => {
   try {
     const patient = patientService.createPatientEntry(req.params.id, req.body);
     console.log(req.body);

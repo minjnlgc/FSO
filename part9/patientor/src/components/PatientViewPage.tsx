@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import { Gender, Patient } from "../types";
+import { EntryWithoutId, Gender, Patient } from "../types";
 import { useEffect, useState } from "react";
 
 import EntryView from "./EntryView/EntryView";
@@ -9,6 +9,7 @@ import MaleIcon from "@mui/icons-material/Male";
 import TransgenderIcon from "@mui/icons-material/Transgender";
 
 import patientService from "../services/patients";
+import axios from "axios";
 
 interface Props {
   patientId: string | null;
@@ -29,6 +30,7 @@ const showGender = (gender: Gender) => {
 
 const PatientViewPage = ({ patientId }: Props) => {
   const [patient, setPatient] = useState<Patient | null>(null);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     const fetchPatientById = async () => {
@@ -46,6 +48,27 @@ const PatientViewPage = ({ patientId }: Props) => {
     return null;
   }
 
+  const submitNewEntry = async (object: EntryWithoutId, id=patientId) => {
+    try {
+      const returnedPatient = await patientService.createEntryByPatientId(id, object);
+      setPatient(returnedPatient);
+    } catch(e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace('Something went wrong. Error: ', '');
+          console.error(message);
+          setError(message);
+        } else {
+          console.log("Unrecognized axios error");
+          setError("Unrecognized axios error");
+        }
+      } else {
+        console.error("Unknown error", e);
+        setError("Unknown error");
+      }
+    }
+  }
+
   return (
     <div>
       <Typography variant="h4" style={{ marginTop: "1em" }}>
@@ -56,7 +79,7 @@ const PatientViewPage = ({ patientId }: Props) => {
       </Typography>
       <Typography variant="body1">occupation: {patient.occupation}</Typography>
       
-      <EntryView entries={patient.entries} />
+      <EntryView entries={patient.entries} onSubmit={submitNewEntry}/>
     </div>
   );
 };

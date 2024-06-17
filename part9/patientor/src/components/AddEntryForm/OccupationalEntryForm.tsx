@@ -4,15 +4,15 @@ import {
   Typography,
   TextField,
   Input,
-  MenuItem,
   Button,
-  Checkbox,
   InputLabel,
-  ListItemText,
+  MenuItem,
   Select,
+  ListItemText,
+  Checkbox,
   SelectChangeEvent,
 } from "@mui/material";
-import { Diagnosis, EntryWithoutId, HealthCheckRating } from "../../types";
+import { Diagnosis, EntryWithoutId } from "../../types";
 import { SyntheticEvent, useState } from "react";
 
 interface Props {
@@ -21,7 +21,7 @@ interface Props {
   onSubmit: (object: EntryWithoutId, id?: string) => void;
 }
 
-const HealthCheckEntryForm = ({
+const OccupationalEntryForm = ({
   toggleVisibility,
   diagnoses,
   onSubmit,
@@ -31,10 +31,11 @@ const HealthCheckEntryForm = ({
   );
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
+  const [employerName, setEmployerName] = useState("");
   const [specialist, setSpecialist] = useState("");
-  const [healthcheckrating, setHealthcheckrating] = useState<
-    HealthCheckRating | string
-  >("");
+
+  const [sickLeaveStartDate, setSickLeaveStartDate] = useState("");
+  const [sickLeaveEndDate, setSickLeaveEndDate] = useState("");
 
   const handleDiagnosisCodeChange = (
     event: SelectChangeEvent<typeof diagnosisCode>
@@ -52,31 +53,33 @@ const HealthCheckEntryForm = ({
     event.preventDefault();
 
     console.log("submit!");
-    console.log("description:", description);
-    console.log("date:", date);
-    console.log("specialist:", specialist);
-    console.log("health check rating:", healthcheckrating);
-    console.log("diagnosisCode:", diagnosisCode);
 
-    const healthCheckEntry: EntryWithoutId = {
+    let occupationalEntry: EntryWithoutId = {
       description: description,
       date: date,
       specialist: specialist,
       diagnosisCodes: diagnosisCode,
-      healthCheckRating: healthcheckrating as HealthCheckRating,
-      type: "HealthCheck",
+      employerName: employerName,
+      type: "OccupationalHealthcare",
     };
 
-    console.log(healthCheckEntry);
+    if (sickLeaveStartDate && sickLeaveEndDate) {
+      occupationalEntry.sickLeave = {
+        startDate: sickLeaveStartDate,
+        endDate: sickLeaveEndDate,
+      };
+    }
 
-    onSubmit(healthCheckEntry);
+    console.log(occupationalEntry);
+
+    onSubmit(occupationalEntry);
   };
 
   return (
     <Card sx={{ minWidth: 275, mt: 2 }}>
       <CardContent>
-        <Typography gutterBottom>
-          <strong>New HealthCheck entry</strong>
+        <Typography gutterBottom sx={{ mb: 1 }}>
+          <strong>New Occupational Health Care entry</strong>
         </Typography>
 
         <form onSubmit={handleSubmit}>
@@ -84,11 +87,11 @@ const HealthCheckEntryForm = ({
             id="description"
             fullWidth
             label="Description"
-            multiline
             value={description}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
               setDescription(event.target.value)
             }
+            multiline
             maxRows={4}
           />
 
@@ -102,6 +105,17 @@ const HealthCheckEntryForm = ({
           />
 
           <TextField
+            id="employerName"
+            label="Employer Name"
+            value={employerName}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setEmployerName(event.target.value)
+            }
+            fullWidth
+            sx={{ mb: 2, mt: 2 }}
+          />
+
+          <TextField
             id="specialist"
             label="Specialist"
             value={specialist}
@@ -112,34 +126,33 @@ const HealthCheckEntryForm = ({
             sx={{ mb: 2, mt: 2 }}
           />
 
-          <TextField
-            id="healthcheckrating"
-            select
-            label="Health check rating"
-            defaultValue={healthcheckrating || ""}
-            value={healthcheckrating}
+          {/* sick leaves */}
+          <InputLabel sx={{ mb: 1, ml: 1 }}>Sick Leave</InputLabel>
+
+          <InputLabel sx={{ ml: 1.5 }}>Start Date</InputLabel>
+          <Input
+            type="date"
+            id="startDate"
+            value={sickLeaveStartDate}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-              setHealthcheckrating(
-                Number(event.target.value) as HealthCheckRating
-              )
+              setSickLeaveStartDate(event.target.value)
             }
-            fullWidth
-            sx={{ mb: 2, mt: 2 }}
-          >
-            {Object.keys(HealthCheckRating)
-              .filter((key) => isNaN(Number(key))) // Filters out numeric keys
-              .map((key) => {
-                const value =
-                  HealthCheckRating[key as keyof typeof HealthCheckRating];
-                return (
-                  <MenuItem key={value} value={value}>
-                    {key}
-                  </MenuItem>
-                );
-              })}
-          </TextField>
+            sx={{ mb: 1.5, mt: 0.5, ml: 1.5 }}
+          />
+
+          <InputLabel sx={{ ml: 1.5 }}>End Date</InputLabel>
+          <Input
+            type="date"
+            id="EndDate"
+            value={sickLeaveEndDate}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setSickLeaveEndDate(event.target.value)
+            }
+            sx={{ mb: 1.5, mt: 0.5, ml: 1.5 }}
+          />
 
           {/* diagnosis codes */}
+
           <InputLabel id="diagnosis-codes-label" sx={{ mt: 1, ml: 0.2 }}>
             Diagnosis Codes
           </InputLabel>
@@ -174,4 +187,4 @@ const HealthCheckEntryForm = ({
   );
 };
 
-export default HealthCheckEntryForm;
+export default OccupationalEntryForm;
