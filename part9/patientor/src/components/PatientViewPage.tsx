@@ -30,7 +30,6 @@ const showGender = (gender: Gender) => {
 
 const PatientViewPage = ({ patientId }: Props) => {
   const [patient, setPatient] = useState<Patient | null>(null);
-  const [error, setError] = useState<string>();
 
   useEffect(() => {
     const fetchPatientById = async () => {
@@ -57,14 +56,11 @@ const PatientViewPage = ({ patientId }: Props) => {
         if (e?.response?.data && typeof e?.response?.data === "string") {
           const message = e.response.data.replace('Something went wrong. Error: ', '');
           console.error(message);
-          setError(message);
         } else {
           console.log("Unrecognized axios error");
-          setError("Unrecognized axios error");
         }
       } else {
         console.error("Unknown error", e);
-        setError("Unknown error");
       }
     }
   }
